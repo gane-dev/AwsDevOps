@@ -1,5 +1,7 @@
 """Generating CloudFormation template.""" 
+from ipaddress import ip_network
  
+from ipify import get_ip
 from troposphere import ( 
     Base64, 
     ec2, 
@@ -12,13 +14,13 @@ from troposphere import (
 ) 
 
 ApplicationPort = "3000" 
-
+PublicCidrIp = str(ip_network(get_ip()))
 t = Template() 
 
 t.add_description("Simple HelloWorld web application") 
 
 t.add_parameter(Parameter( 
-    "KeyPair", 
+    "GaneshAwsDevOps2", 
     Description="GaneshAwsDevOps2", 
     Type="AWS::EC2::KeyPair::KeyName", 
     ConstraintDescription="must be the name of an existing EC2 KeyPair.", 
@@ -32,13 +34,13 @@ t.add_resource(ec2.SecurityGroup(
             IpProtocol="tcp", 
             FromPort="22", 
             ToPort="22", 
-            CidrIp="0.0.0.0/0", 
+            CidrIp=PublicCidrIp, 
         ), 
         ec2.SecurityGroupRule( 
             IpProtocol="tcp", 
             FromPort=ApplicationPort, 
             ToPort=ApplicationPort, 
-            CidrIp="0.0.0.0/0", 
+            CidrIp=PublicCidrIp, 
         ), 
     ], 
 )) 
@@ -56,7 +58,7 @@ t.add_resource(ec2.Instance(
     ImageId="ami-1853ac65", 
     InstanceType="t2.micro", 
     SecurityGroups=[Ref("SecurityGroup")], 
-    KeyName=Ref("KeyPair"), 
+    KeyName=Ref("GaneshAwsDevOps2"), 
     UserData=ud, 
 ))  
 
