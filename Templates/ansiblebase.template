@@ -76,10 +76,10 @@
                             "\n",
                             [
                                 "#!/bin/bash",
-                                "sudo yum install --enablerepo=epel -y nodejs",
-                                "wget http://bit.ly/2vESNuc -O /home/ec2-user/helloworld.js",
-                                "wget http://bit.ly/2vVvT18 -O /etc/init/helloworld.conf",
-                                "start helloworld"
+                                "yum install --enablerepo=epel -y git",
+                                "pip install ansible",
+                                "/usr/local/bin/ansible-pull -U https://github.com/gane-dev/ansible helloworld.yml -i localhost",
+                                "echo '*/10 * * * * /usr/local/bin/ansible-pull -U https://github.com/gane-dev/ansible helloworld.yml -i localhost' > /etc/cron.d/ansible-pull"
                             ]
                         ]
                     }
